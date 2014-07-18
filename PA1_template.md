@@ -28,7 +28,7 @@ Use the aggregaate() function to sum steps over unique dates. Then, create a his
 
 ```r
 X <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
-hist(X[,2], main="Step Totals per Day",xlab="Number of Steps", breaks=10)
+hist(X[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
@@ -131,7 +131,7 @@ activity$DayType <- as.factor(activity$DayType)
 
 library(lattice)
 
-xyplot(activity$steps ~ activity$interval | activity$DayType, type="l", vertical=TRUE,
+xyplot(activity$steps ~ activity$interval | activity$DayType, type="l",
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```
