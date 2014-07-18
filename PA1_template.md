@@ -132,7 +132,7 @@ activity$DayType <- as.factor(activity$DayType)
 library(lattice)
 
 xyplot(activity$steps ~ activity$interval | activity$DayType, type="l",
-       main=list(cex=1.4, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
+       main=list(cex=1.35, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```
