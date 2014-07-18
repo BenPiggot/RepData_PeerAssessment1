@@ -66,7 +66,7 @@ activity$DayType <- as.factor(activity$DayType)
 
 library(lattice)
 
-xyplot(activity$steps ~ activity$interval | activity$DayType, type="l",
+xyplot(activity$steps ~ activity$interval | activity$DayType, type="l", 
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```

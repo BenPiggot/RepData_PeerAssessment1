@@ -297,7 +297,7 @@ activity$DayType &lt;- as.factor(activity$DayType)
 
 library(lattice)
 
-xyplot(activity$steps ~ activity$interval | activity$DayType, type=&quot;l&quot;,
+xyplot(activity$steps ~ activity$interval | activity$DayType, type=&quot;l&quot;, 
        ylab=&quot;Number of Steps&quot;, xlab=&quot;Time of Day (in Five Minute Intervals)&quot;,
        layout=c(1,2))
 </code></pre>
