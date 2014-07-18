@@ -4,7 +4,7 @@
 
 ## Loading and preprocessing the data
 Load the data set into R and transform the steps and interval variables.
-```{r echo=TRUE}
+```{r, echo=TRUE}
 activity <- read.csv("activity.csv")
 activity$steps <- as.numeric(activity$steps)
 activity$interval <- as.numeric(activity$interval)
@@ -14,7 +14,7 @@ head(activity)
 
 ## What is mean total number of steps taken per day?
 Use the aggregaate() function to sum steps over unique dates. Then, create a histogram using the results aggregate function (sum total of steps per date). Then, determine the mean and median for number of steps per day of the sum total of steps per date.
-```{r echo=TRUE}
+```{r, echo=TRUE}
 X <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
 hist(X[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
 mean(X[,2])
@@ -23,7 +23,7 @@ median(X[,2])
 
 ## What is the average daily activity pattern?
 Use the aggregate() function again to find the mean number of steps taken per 5 minute intervals. Then, plot the mean number of steps per interval. 
-```{r echo=TRUE}
+```{r, echo=TRUE}
 Y <-aggregate(activity$steps ~ activity$interval, data=activity, mean, na.rm=TRUE)
 
 plot(Y[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)", main="Average Number of Steps at Different Times of Day")
@@ -32,7 +32,7 @@ plot(Y[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="
 
 ## Imputing missing values
 First, determine the numbe of NAs in the activity dataframe. Then, create a new variable column in the activity dataframe, StepMeans (StepMeans is the mean number of steps taken per 5 minutes intervals determined above). Then, use a for() loop to replace the NA values in the steps variable with the mean number of steps for the corresponding 5 minute interval, updating the original activity dataframe. Finally, use the aggregate function to determine the sum total steps over unique dates in updated dataframe. Create a histogram and determine the mean and median number of steps per day based ont the results. Note that the updated dataframe (with NA values replaced) has the same mean number of steps per day as the original data, while the mean is almost exactly the same. This is not surprising, as the NA values were replaced with 5 minute interval averages taken from the original dataframe. 
-```{r echo=TRUE}
+```{r, echo=TRUE}
 sum(is.na(activity$steps)) + sum(is.na(activity$interval)) + sum(is.na(activity$date))
 
 activity$StepMeans <- Y[,2]
@@ -55,7 +55,7 @@ median(A[,2])
 
 ## Are there differences in activity patterns between weekdays and weekends?
 Create a new variable, days, using the as.Date() and weekdays() function. Then, using the ifelse() function, create a two level factor variable that divides the days variable into weekdays or weekends. Finally, use lattice  to create a two panel plot showing how the number of steps taken per 5 minute intervals each day differs on weekdays and weekend days.
-```{r echo=TRUE}
+```{r, echo=TRUE}
 activity$days <- weekdays(as.Date(activity$date))
 
 activity$DayType <- ifelse(activity$days == "Monday" |  activity$days == "Tuesday" |
