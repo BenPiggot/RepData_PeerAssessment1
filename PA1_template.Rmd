@@ -71,7 +71,7 @@ ActivityMean3 <- aggregate(activity$steps ~ activity$interval + activity$DayType
 library(lattice)
 
 xyplot(ActivityMean3[,3] ~ ActivityMean3[,1] | ActivityMean3[,2], type ="l",
-       main=list(cex=1.37, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
+       main=list(cex=1.35, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```
