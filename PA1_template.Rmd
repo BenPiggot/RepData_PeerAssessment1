@@ -9,24 +9,24 @@ activity <- read.csv("activity.csv")
 activity$steps <- as.numeric(activity$steps)
 activity$interval <- as.numeric(activity$interval)
 activity$interval <- unique(activity$interval)
-head(activity)
+summary(activity)
 ```
 
 ## What is mean total number of steps taken per day?
 Use the aggregaate() function to sum steps over unique dates. Then, create a histogram using the results aggregate function (sum total of steps per date). Then, determine the mean and median for number of steps per day of the sum total of steps per date.
 ```{r, echo=TRUE}
-X <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
-hist(X[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
-mean(X[,2])
-median(X[,2])
+ActivitySum <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
+hist(ActivitySum[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
+mean(ActivitySum[,2])
+median(ActivitySum[,2])
 ```
 
 ## What is the average daily activity pattern?
 Use the aggregate() function again to find the mean number of steps taken per 5 minute intervals. Then, plot the mean number of steps per interval. 
 ```{r, echo=TRUE}
-Y <-aggregate(activity$steps ~ activity$interval, data=activity, mean, na.rm=TRUE)
+ActivityMean <-aggregate(activity$steps ~ activity$interval, data=activity, mean, na.rm=TRUE)
 
-plot(Y[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)", main="Average Number of Steps at Different Times of Day")
+plot(ActivityMean[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)", main="Average Number of Steps at Different Times of Day")
 
 ```
 
@@ -35,7 +35,7 @@ First, determine the numbe of NAs in the activity dataframe. Then, create a new 
 ```{r, echo=TRUE}
 sum(is.na(activity$steps)) + sum(is.na(activity$interval)) + sum(is.na(activity$date))
 
-activity$StepMeans <- Y[,2]
+activity$StepMeans <- ActivityMean[,2]
 
 for(i in 1:nrow(activity)){
   if (is.na(activity[i,1])) {
@@ -43,14 +43,14 @@ for(i in 1:nrow(activity)){
   }
 }
 
-head(activity)
+summary(activity)
 
-A <- aggregate(activity[,1] ~ activity[,2], data=activity, sum, na.rm=TRUE)
+ActivityMean2 <- aggregate(activity[,1] ~ activity[,2], data=activity, sum, na.rm=TRUE)
 
-hist(A[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
+hist(ActivityMean2[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
 
-mean(A[,2])
-median(A[,2])
+mean(ActivityMean2[,2])
+median(ActivityMean2[,2])
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -59,15 +59,20 @@ Create a new variable, days, using the as.Date() and weekdays() function. Then, 
 activity$days <- weekdays(as.Date(activity$date))
 
 activity$DayType <- ifelse(activity$days == "Monday" |  activity$days == "Tuesday" |
-                    activity$days == "Wednesday" | activity$days == "Thursday" | 
-                    activity$days == "Friday", c("Weekday"), c("Weekend"))
+                           activity$days == "Wednesday" | activity$days == "Thursday" | 
+                           activity$days == "Friday", c("Weekday"), c("Weekend"))
 
 activity$DayType <- as.factor(activity$DayType)
 
+summary(activity)
+
+ActivityMean3 <- aggregate(activity$steps ~ activity$interval + activity$DayType, data=activity, mean)
+
 library(lattice)
 
-xyplot(activity$steps ~ activity$interval | activity$DayType, type="l",
+xyplot(ActivityMean3[,3] ~ ActivityMean3[,1] | ActivityMean3[,2], type ="l",
        main=list(cex=1.37, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```
+

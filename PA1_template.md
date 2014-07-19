@@ -10,31 +10,32 @@ activity <- read.csv("activity.csv")
 activity$steps <- as.numeric(activity$steps)
 activity$interval <- as.numeric(activity$interval)
 activity$interval <- unique(activity$interval)
-head(activity)
+summary(activity)
 ```
 
 ```
-##   steps       date interval
-## 1    NA 2012-10-01        0
-## 2    NA 2012-10-01        5
-## 3    NA 2012-10-01       10
-## 4    NA 2012-10-01       15
-## 5    NA 2012-10-01       20
-## 6    NA 2012-10-01       25
+##      steps               date          interval   
+##  Min.   :  0.0   2012-10-01:  288   Min.   :   0  
+##  1st Qu.:  0.0   2012-10-02:  288   1st Qu.: 589  
+##  Median :  0.0   2012-10-03:  288   Median :1178  
+##  Mean   : 37.4   2012-10-04:  288   Mean   :1178  
+##  3rd Qu.: 12.0   2012-10-05:  288   3rd Qu.:1766  
+##  Max.   :806.0   2012-10-06:  288   Max.   :2355  
+##  NA's   :2304    (Other)   :15840
 ```
 
 ## What is mean total number of steps taken per day?
 Use the aggregaate() function to sum steps over unique dates. Then, create a histogram using the results aggregate function (sum total of steps per date). Then, determine the mean and median for number of steps per day of the sum total of steps per date.
 
 ```r
-X <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
-hist(X[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
+ActivitySum <-aggregate(activity$steps ~ activity$date, data=activity, sum, na.rm=TRUE)
+hist(ActivitySum[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 ```r
-mean(X[,2])
+mean(ActivitySum[,2])
 ```
 
 ```
@@ -42,7 +43,7 @@ mean(X[,2])
 ```
 
 ```r
-median(X[,2])
+median(ActivitySum[,2])
 ```
 
 ```
@@ -53,9 +54,9 @@ median(X[,2])
 Use the aggregate() function again to find the mean number of steps taken per 5 minute intervals. Then, plot the mean number of steps per interval. 
 
 ```r
-Y <-aggregate(activity$steps ~ activity$interval, data=activity, mean, na.rm=TRUE)
+ActivityMean <-aggregate(activity$steps ~ activity$interval, data=activity, mean, na.rm=TRUE)
 
-plot(Y[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)", main="Average Number of Steps at Different Times of Day")
+plot(ActivityMean[,2] ~ unique(activity$interval), type="l", ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)", main="Average Number of Steps at Different Times of Day")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
@@ -72,7 +73,7 @@ sum(is.na(activity$steps)) + sum(is.na(activity$interval)) + sum(is.na(activity$
 ```
 
 ```r
-activity$StepMeans <- Y[,2]
+activity$StepMeans <- ActivityMean[,2]
 
 for(i in 1:nrow(activity)){
   if (is.na(activity[i,1])) {
@@ -80,29 +81,30 @@ for(i in 1:nrow(activity)){
   }
 }
 
-head(activity)
+summary(activity)
 ```
 
 ```
-##     steps       date interval StepMeans
-## 1 1.71698 2012-10-01        0   1.71698
-## 2 0.33962 2012-10-01        5   0.33962
-## 3 0.13208 2012-10-01       10   0.13208
-## 4 0.15094 2012-10-01       15   0.15094
-## 5 0.07547 2012-10-01       20   0.07547
-## 6 2.09434 2012-10-01       25   2.09434
+##      steps               date          interval      StepMeans     
+##  Min.   :  0.0   2012-10-01:  288   Min.   :   0   Min.   :  0.00  
+##  1st Qu.:  0.0   2012-10-02:  288   1st Qu.: 589   1st Qu.:  2.49  
+##  Median :  0.0   2012-10-03:  288   Median :1178   Median : 34.11  
+##  Mean   : 37.4   2012-10-04:  288   Mean   :1178   Mean   : 37.38  
+##  3rd Qu.: 27.0   2012-10-05:  288   3rd Qu.:1766   3rd Qu.: 52.83  
+##  Max.   :806.0   2012-10-06:  288   Max.   :2355   Max.   :206.17  
+##                  (Other)   :15840
 ```
 
 ```r
-A <- aggregate(activity[,1] ~ activity[,2], data=activity, sum, na.rm=TRUE)
+ActivityMean2 <- aggregate(activity[,1] ~ activity[,2], data=activity, sum, na.rm=TRUE)
 
-hist(A[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
+hist(ActivityMean2[,2], main="Step Totals per Day", xlab="Number of Steps", breaks=10)
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
 ```r
-mean(A[,2])
+mean(ActivityMean2[,2])
 ```
 
 ```
@@ -110,7 +112,7 @@ mean(A[,2])
 ```
 
 ```r
-median(A[,2])
+median(ActivityMean2[,2])
 ```
 
 ```
@@ -124,17 +126,43 @@ Create a new variable, days, using the as.Date() and weekdays() function. Then, 
 activity$days <- weekdays(as.Date(activity$date))
 
 activity$DayType <- ifelse(activity$days == "Monday" |  activity$days == "Tuesday" |
-                    activity$days == "Wednesday" | activity$days == "Thursday" | 
-                    activity$days == "Friday", c("Weekday"), c("Weekend"))
+                           activity$days == "Wednesday" | activity$days == "Thursday" | 
+                           activity$days == "Friday", c("Weekday"), c("Weekend"))
 
 activity$DayType <- as.factor(activity$DayType)
 
+summary(activity)
+```
+
+```
+##      steps               date          interval      StepMeans     
+##  Min.   :  0.0   2012-10-01:  288   Min.   :   0   Min.   :  0.00  
+##  1st Qu.:  0.0   2012-10-02:  288   1st Qu.: 589   1st Qu.:  2.49  
+##  Median :  0.0   2012-10-03:  288   Median :1178   Median : 34.11  
+##  Mean   : 37.4   2012-10-04:  288   Mean   :1178   Mean   : 37.38  
+##  3rd Qu.: 27.0   2012-10-05:  288   3rd Qu.:1766   3rd Qu.: 52.83  
+##  Max.   :806.0   2012-10-06:  288   Max.   :2355   Max.   :206.17  
+##                  (Other)   :15840                                  
+##      days              DayType     
+##  Length:17568       Weekday:12960  
+##  Class :character   Weekend: 4608  
+##  Mode  :character                  
+##                                    
+##                                    
+##                                    
+## 
+```
+
+```r
+ActivityMean3 <- aggregate(activity$steps ~ activity$interval + activity$DayType, data=activity, mean)
+
 library(lattice)
 
-xyplot(activity$steps ~ activity$interval | activity$DayType, type="l",
+xyplot(ActivityMean3[,3] ~ ActivityMean3[,1] | ActivityMean3[,2], type ="l",
        main=list(cex=1.37, label="Difference in Activity Patterns, Weekends vs. Weekdays"),
        ylab="Number of Steps", xlab="Time of Day (in Five Minute Intervals)",
        layout=c(1,2))
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
